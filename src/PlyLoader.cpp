@@ -233,8 +233,8 @@ PlyLoader::readFile(const std::string& filePath)
                                        + _mesh->getNormals().size()   * sizeof(Vector3)
                                        + _mesh->getColors().size()    * sizeof(vec4)
                                        + _mesh->getTexCoords().size() * sizeof(Point3)
-                                       + _mesh->getLines().size()     * sizeof(Line);
-                                       + _mesh->getTriangles().size() * sizeof(TriangleFace);
+                                       + _mesh->getLines().size()     * sizeof(Line)
+                                       + _mesh->getTriangles().size() * sizeof(TriangleFace)
                                        + _mesh->getQuads().size()     * sizeof(QuadFace);
 
     std::cerr << std::endl;

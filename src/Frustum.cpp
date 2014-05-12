@@ -132,12 +132,7 @@ Frustum::lineIntersect(const Point3& point1, const Point3& point2) const
   std::cout << std::endl << "             Sorry, but this method is not implemented...";
   std::flush(std::cout);
 
-  /// avoid compiler warings
-  gloost::Point3 a = point1;
-  gloost::Point3 b = point2;
-
-
-	return true;
+  return true;
 }
 
 
