@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		<Project filename="../../../../../Source/gloost/tutorials/essentials/step_00_glut_template/step_00_glut_template_gnulinux.cbp">
+			<Depends filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		</Project>
+		<Project filename="../../../../../Source/gloost/tutorials/essentials/step_01_loading_geometry/step_01_loading_geometry_gnulinux.cbp" active="1">
+			<Depends filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		</Project>
+		<Project filename="../../../../../Source/gloost/tutorials/essentials/step_02_adding_some_material_and_light/step_02_adding_some_material_and_light_gnulinux.cbp">
+			<Depends filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		</Project>
+		<Project filename="../../../../../Source/gloost/tutorials/essentials/step_03_adding_glsl_shading/step_03_adding_glsl_shading_gnulinux.cbp">
+			<Depends filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		</Project>
+		<Project filename="../../../../../Source/gloost/tutorials/essentials/step_04_Textures_and_TextureManager/step_04_Textures_and_TextureManager_gnulinux.cbp">
+			<Depends filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		</Project>
+	</Workspace>
+</CodeBlocks_workspace_file>

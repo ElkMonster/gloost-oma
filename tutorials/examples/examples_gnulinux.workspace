@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="gloost examples Workspace gnulinux">
+		<Project filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		<Project filename="../../../../../Source/gloost/tutorials/examples/gloost_gpgpu_example/gloost_gpgpu_example_gnulinux.cbp" active="1">
+			<Depends filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		</Project>
+		<Project filename="../../../../../Source/gloost/tutorials/examples/gloost_widgets/gloost_widgets_gnulinux.cbp">
+			<Depends filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		</Project>
+		<Project filename="../../../../../Source/gloost/tutorials/examples/volume_rendering/volume_rendering_gnulinux.cbp">
+			<Depends filename="../../../../../Source/gloost/gnulinux/library_build_with_codeblocks/library_build_with_codeblocks.cbp" />
+		</Project>
+	</Workspace>
+</CodeBlocks_workspace_file>

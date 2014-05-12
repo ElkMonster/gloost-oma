@@ -1,0 +1,2 @@
+Windows and MacOS is currently not supported. An older version with support
+for both systems can be found at http://developer.berlios.de/projects/gloost/

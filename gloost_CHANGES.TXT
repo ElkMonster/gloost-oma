@@ -1,0 +1,592 @@
+
+                       ___                            __      
+                      /\_ \                          /\ \__   
+                   __ \//\ \     ___     ___     ____\ \  _\  
+                 /'_ `\ \ \ \   / __`\  / __`\  /  __\\ \ \/  
+                /\ \ \ \ \_\ \_/\ \ \ \/\ \ \ \/\__   \\ \ \_ 
+                \ \____ \/\____\ \____/\ \____/\/\____/ \ \__\
+                 \/___/\ \/____/\/___/  \/___/  \/___/   \/__/
+                   /\____/                                    
+                   \_/__/     
+                
+                     OpenGL framework for fast demo programming
+
+///////////////////////////////////////////////////////////////////////////////
+                                 \** CHANGES **/
+///////////////////////////////////////////////////////////////////////////////
+
+  2011.02.28 otaco
+  
+  ### Horrible Bug in gloost::Matrix
+
+  Found a bug in gloost::Matrix::setRotateY(mathType angle). Field _data[2] and
+  _data[8] had a wrong sign. Me so sorry ;-(
+  
+  Changed                   to
+
+   _data[0] = cosine;            _data[0] = cosine;
+   _data[2] =  sine;             _data[2] =  -sine;
+   _data[8] =  -sine;            _data[8] =  sine;
+   _data[10] = cosine;           _data[10] = cosine;
+
+  ... as found at http://en.wikipedia.org/wiki/Rotation_matrix#Rotations_in_three_dimensions
+
+  So if your stuff rotates in the wrong direction around Y just change the sign.
+  I will check the other methodes right away.
+
+       
+///////////////////////////////////////////////////////////////////////////////
+
+
+  2010.06.22 otaco
+  
+  ### gloost::Node and gloost::CoreManager
+  gloost::Node has now two new constructors, taking names or IDs of Cores
+  within the gloost::CoreManager. You can create your Cores centrally and
+  store them within the CoreManager. When you build your graph, you can
+  use the assigned names within the Nodes contructor.
+  This will result in more readable code as you will see...
+
+
+  /*
+    Create your Cores centrally.
+    By the way: You don't need a GL context at this point.
+  */
+
+  void initResources()
+  {
+
+    gloost::CoreManager* coreManager = gloost::CoreManager::getInstance();
+
+    // create a GeometryCore
+    _coreManager->addCoreAndAssignName(new gloost::GeometryCore(new gloost::Obj("frog2.obj")),
+                                       "spaceShip");
+    
+    // create a ShaderCore with an UniformSet
+    gloost::UniformSet* someUniforms = new gloost::UniformSet();
+    someUniforms->set_float(...);
+    _coreManager->addCoreAndAssignName(new gloost::ShaderCore(someUniforms),
+                                       "someUniforms");
+
+    // create a ShaderCore with a Shader
+    gloost::Shader* aNiceShader = new gloost::Shader(....);
+    _coreManager->addCoreAndAssignName(new gloost::ShaderCore(aNiceShader),
+                                       "aNiceShader");
+  }
+
+
+  /*
+    Now build your graph elsewhere
+    From bottom upwards, using the names of the Cores instead of a Core*
+    By the way: You don't need a GL context at this point.
+  */
+
+  gloost::Node* buildGraph()
+  {
+    gloost::Node geoNode = new gloost::Node("spaceShip");
+
+    gloost::Node uniformNode = new gloost::Node("someUniforms");
+    uniformNode->addChild(geoNode);
+
+    gloost::Node shaderNode = new gloost::Node("aNiceShader");
+    shaderNode->addChild(uniformNode);
+
+    return shaderNode;
+  }
+  
+  
+       
+///////////////////////////////////////////////////////////////////////////////
+
+  2010.06.14 otaco
+  
+  ### gloost::Shader program parameters
+  gloost::Shader now uses a map<GLenum, int> to store program parameter to
+  support current and future parameters generically.
+
+  Program parameters can be set by calling
+
+    void Shader::setProgramParameter(GLenum type, GLint parameter)
+
+  Have a look into the doxygen doc or in the Shader::setProgramParameter
+  implementation in the source to learn about the available parameters
+  and values. This has to be done after the shader files have bin loaded
+  and befor they are compiled/used.
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+  2010.05.26 otaco
+  
+  ### gloost::Fbo and GL_TEXTURE_2D_ARRAY_EXT
+  The gloost::Fbo now supports GL_TEXTURE_2D_ARRAY_EXT attachments
+  
+       
+///////////////////////////////////////////////////////////////////////////////
+  
+  2010.03.21 otaco
+  
+  ### Geometry Shader
+  The gloost::Shader() now supports GLSL geometry shader.
+  Input- and output type can be set with 
+
+    gloost::Shader::setProgramParameter(GLenum type,
+                                        GLint parameter,
+                                        unsigned int contextId = 0);
+                                 
+  ... after the Shader object was bound.
+  
+      void display()
+      {
+        ...
+        
+        myShader->set();
+        myUniforms1->applyToShader(myShader);
+        myUniforms2->addToShader(myShader);
+        myShader->setProgramParameter(GL_GEOMETRY_INPUT_TYPE_EXT,
+                                      GL_TRIANGLES);
+        myShader->setProgramParameter(GL_GEOMETRY_OUTPUT_TYPE_EXT,
+                                      GL_POINTS);
+        drawStuff();
+        
+        mayShader->disable();
+      }
+  
+  
+    
+  ### gloost::Dcs extended
+  The gloost::Dcs class now has additional methodes to transform it. rotate(),
+  translate() and scale() methodes adding the transformation to the component
+  matrices within the Dcs.
+  
+      /// rotates the Dcs
+      void rotate(const Vector3& axis, const mathType& radAngle);
+      /// rotates the Dcs
+      void rotate(const Matrix& rotMat);
+      
+      /// translates the Dcs
+      void translate(const mathType& x, const mathType& y, const mathType& z);
+      /// translates the Dcs
+      void translate(const Vector3& transVec);
+      /// translates the Dcs
+      void translate(const Matrix& transMat);
+      
+      // scales the Dcs
+      void scale(const mathType& uniformScaleFactor);
+      // scales the Dcs
+      void scale(const Vector3& scale);
+      // scales the Dcs
+      void scale(const mathType& x, const mathType& y, const mathType& z);
+      // scales the Dcs
+      void scale(const Matrix& scaleMat);
+     
+       
+///////////////////////////////////////////////////////////////////////////////
+
+
+  2010.01.28 otaco
+  
+  ### SDL and Gui
+  The gloost::Gui now works with SDL Windows too. For this purpose, the Gui
+  and the EventHandler now refer to the mouse buttons and the scroll wheel
+  as following (defines can be found in  <gloost>/src/Mouse.h):
+  
+    GLOOST_MOUSE_BUTTON1, GLOOST_MOUSE_BUTTON2 ,GLOOST_MOUSE_BUTTON3 and
+    GLOOST_MOUSE_BUTTON4
+    
+    GLOOST_MOUSE_WHEELUP, GLOOST_MOUSE_WHEELDOWN
+    
+  Note that scrolling with the mouse wheel is considered as button press (down) too.
+  
+  To use the Gui with a SDL_Screen-created windows try the following setup
+  
+    // Create a SDL_Screen
+    gloost::SDL_Screen g_screen(1024, 640, 32);
+  
+    // Create the Eventhandler (you now have to give the screen into the constructor)
+    gloost::EventHandler g_input(&g_screen);
+    
+    // create the gui (you can now give a alternative Mouse)
+    gloost::Gui g_gui = new gloost::Gui("../../data", g_input.getMouse());
+  
+  Note that the Y-Axis of the Mouse from the EventHandler has flipped !!!
+  
+  The examples "intergalactic", "SDL_EventHandler" and the "stardust demo"
+  have been changed a little.
+  The "SDL_EventHandler" example now has a toggle to determine if a grid shall
+  be drawn.
+    
+
+///////////////////////////////////////////////////////////////////////////////
+
+   
+  2009.12.22 otaco
+
+
+  ### Multi GL Context:
+  The gloost::MultiGlContext and enherited classes like gloost::Shader,
+  gloost::Texture, gloost::Obj, gloost::UniformSet are now tested with a five
+  context setup. First I build a scenegraph without having a GL context. Then
+  five threads are started which initialize contexts for them self. All the
+  upload-data-to-gpu-and-get-a-handle stuff is now implemented in a "lazy" way
+  (with the first use of the actual gpu resource).
+  
+  
+  ### gloost::Obj update
+  The Obj class is now able to read Material files (*.mtl). You can control
+  the diplay list creation by calling this two methodes with true or false.
+  
+  /// enables material from *.mtl file within the display lists (default: true)
+  void 	enableComplileWithMaterial (bool value=true)
+  
+  // enables diffuse color from *.mtl file within the display lists as glColor
+  // (don't forget glEnable(GL_COLOR_MATERIAL in you app)) (default: false) 
+  void 	enableComplileWithColorMaterial (bool value=true)
+  
+  Note: The display list is automaticaly created with Material but you won't see
+  it if you don't have a light enabled. If you don't want to use a Light you
+  can enable GL_COLOR_MATERIAL and call enableComplileWithColorMaterial(true).
+ 	
+ 	
+ 	
+ 	### Documentation
+ 	I started to rewrite the comments of all methodes within the gloost classes
+ 	using doxygen, so I strongly recommend you build yourself the docs.
+ 	Just go to <gloost>/doc and write
+ 	
+ 	  $ doxygen gloost_doxygen_documentation.dox
+ 	  
+ 	If you'r using Windows you have to install doxygen and open the file
+ 	<gloost>/doc/gloost_doxygen_documentation.dox with the doxygen.exe located in
+ 	<Program Files>/doxygen/bin .
+ 	After the build is completed go to <gloost>/doc/doxygen/html and open the
+ 	index.html file.
+  
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2009.11.27 otaco
+
+  Many changes today.
+
+  ### Sound:
+  !!! THIS IS ALPHA STUFF, SO SOME STUFF MAY NOT WORK OR IS NOT YET IMPLEMENTED !!!
+  With the new gloost classes located in <gloost>/src/sdlsound you can now
+  play sounds and music within your application. SDL_Mixer and dependencies
+  have to be installed if you are working with a Linux system. With
+  
+    gloost::SdlSoundManager* soundManager = gloost::SdlSoundManager::getInstance();
+  
+  you get a instance to the SoundManager. This Instance handles loaded Sounds,
+  SoundSources and SoundJobs.
+  If you do this for the first time in your application you have to initialize
+  the SoundManager with the number of sounds you want to play at the same time.
+  
+    soundManager->start(64);
+  
+  The number depends on the capability of your sound card. 
+  If you want to load a file just try
+  
+    /// load a sound and return a id
+    unsigned int createSound(const std::string& filePath);
+    
+    /// load a sound, assign a name for it and return a id
+    unsigned int createSoundAndAssignName(const std::string& filePath, const std::string& name);
+  
+  With the second one you can assign a name for this loaded sound within you application.
+  
+  The easiest way to play a sound is to use the standard sound source of the
+  SoundManager:
+  
+  soundManager->getSoundSource()->play("enemy_explode",  /// assigned name of the sound
+                                       0.5,              /// volume
+                                       0);               /// loop 0 times
+                                       
+  In your own app you may create a SoundSource for each object to have better
+  control of playing sounds like panning and volume. This can be easily done with:
+  
+    /// create a soundSource, returns a id for it
+    unsigned int createSoundSource();
+  
+  
+  
+  ### Multi GL Context:
+  This functionality has to be tested and is not stable at the moment.
+  gloost is now capable of living in more then one OpenGL context at the same time.
+  Each GL resource like Shader, Texture or Obj is generated and bound for
+  each context. For this purpose the particular classes are enherited from
+  gloost::MultiGlContext. This class hold a container which associates the resource
+  handle given by OpenGl (glGenTexture, glCreateShader, glGenLists) with the id
+  of the current context. All methodes using the actual gl resource like bind() or
+  in the case of a Shader set(), carrying a unsigned int contextId to specify
+  the context in which the resource is handled.
+  
+  PLUS: It's now posible to build a scenegraph without having a contex at all.  
+        The resources are just loaded. When the DrawAction traverses the tree
+        the first time, it will initialize the resources for the particular
+        context.
+  
+  
+  To use it, you first have to specify the number of contexts your gloost can handle
+  by changing the number in this line within the <gloost>src/gloostConfig.h> header:
+  
+    #define GLOOST_SYSTEM_NUM_RENDER_CONTEXTS 1  /// <-- default: 1
+  
+  
+  ### Console output:
+  If you are annoyed of the mass of messages warnings or errors gloost writes to your
+  console output you can disable them by removing the comments from this lines within
+  the <gloost>src/gloostConfig.h> header:
+
+//  #define GLOOST_SYSTEM_DISABLE_OUTPUT_MESSAGES     /// <- let you know what gloost is doing
+//  #define GLOOST_SYSTEM_DISABLE_OUTPUT_WARNINGS     /// <- occurs if something is going wrong. your app will not crash
+//  #define GLOOST_SYSTEM_DISABLE_OUTPUT_ERRORS       /// <- occurs if something is going eh ... wronger. maybe your app will crash
+//  #define GLOOST_SYSTEM_DISABLE_OUTPUT_DEVNOTES     /// <- will give you information if a method is not implemented or obsolete
+
+
+
+  ### GLSL compile time warnings and errors
+  the gloost::Shader class is now capable of providing you with compile time
+  messages and errors. This is done automaticly when the shader is compiled.
+  The Ati-Implementation of OpenGl produce a message even everything was fine,
+  wich tells you that everything was fine. Since I don't want to handle this
+  case, a Shader object will print an error message with a line that the shader
+  was compiled correct. 
+  
+  
+///////////////////////////////////////////////////////////////////////////////
+
+
+  2009.06.17 otaco
+
+  Many changes today.
+
+  ### Math:
+  
+  The math part is more mathlike. So
+   
+   point3-point3=vector3
+   vector3.length() but point3.distanceToOrigin()
+   ... and many more changes...
+   
+   Th whole math part can be compiled with double or float as value type. This
+   can be set in <gloost>/src/gloostConfig.h. Choose one of the two defines:
+   
+      #define GLOOST_MATH_WITH_DOUBLE
+    or
+      #define GLOOST_MATH_WITH_FLOAT
+      
+   A type <mathType> is defined wich is used by all math-related classes in
+   gloost. You can use gloost::mathType in your own applications to be type-
+   conform with the framework.
+   
+   To avoid problems with OpenGL functions taking pointers to arrays like
+   glGetDoublev use gloostGetv which replaces the function call with the version
+   of the right type. (include gloostConfig.h to use this macros)
+   
+   Examples:
+   
+    gloostMultMatrix  will replace  glMultMatrixf  and  glMultMatrixd
+    gloostLoadMatrix  will replace  glLoadMatrixf  and  glLoadMatrixd
+    gloostGetv        will replace  glGetFloatv    and  glGetDoublev
+    ...
+    
+    For all macros look in <gloost>/src/gloostConfig.h.
+    
+    
+    ### EasyFbo and RenderTargetCore:
+    
+    gloost::EasyFbo is largely extended but I forgot wich things I change.
+    
+    gloost::RenderTargetCore now sets his viewport to the size of his
+    color attachment. You can set your own viewport with setViewPort(viewport*).
+    Different viewports for all attachments is not implented for now but will
+    be soon.
+    
+    
+    ### New Examples:
+    
+    gloost_gpgpu_example shows how to create a 16/32bits per value texture to
+    use it as color attachment in a fbo. Two of these textures are used to
+    create a doublebuffer wich is used for a wave simulation.
+    
+    The intergalactic example is now up to date :-)
+    
+    The stardust_demo was rewritten. It now uses the scenegraph.
+    
+    
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2009.01.14 otaco
+
+1. gloost is now gcc 4.3 compatible and therefore more ANSI-like.
+
+2. gloost::Gui is no singelton anymore. To adapt your application just replace
+     gloost::Gui* myGui = gloost::Gui::getInstance();
+   with
+     gloost::Gui* myGui = new gloost::Gui();
+     
+3. Animation system is in. New classes are
+     Keyframe ... - Keyframe with time and value (and much more)
+     
+     Envelope ... - Holds Keyframes
+                  - is able to load/save Newtek Lightwave envelope files
+                  - supports only linear interpolation for now
+                  
+     EnvelopeSet  - Holds 9 Envelopes to support 9 degrees of freedom
+                  - is able to load/save Newtek Lightwave motion files
+                  
+4. New widget gloost::Pad which is a 2D input pad. Look into the gloost_widget
+   demo. There is another widget class called gloost::PropertyInspector which
+   shows automaticly all properties of any widgets you touch with the mouse.
+   This is also shown in the gloost_widget demo.
+   
+   
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.10.02 otaco
+
+Classes Widget, Slider, Button and Toggle added. Compile the gloost_widgets demo
+to get an idea...
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.08.05 otaco
+
+I removed all remaining puppets names and comments from the source.
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.06.25 otaco
+
+New handy gloost::TextLog class. TextLog is basicly a on screen log where you
+can see your messages or debug output. It can completely replace your shell
+during runtime (as long as your program runs with render output) and is a lot
+faster then the shell. You can also scroll up and down within the log and write
+it to a file. It's implemented as an singleton so you can reach it from all over
+your objects with gloost::TextLog::getInstance().
+
+Here a little reference:
+
+    /// get an instance to the Textlog
+    static TextLog* const getInstance();
+
+    /// class destructor
+	  ~TextLog();
+
+	  /// add a line of text
+	  void addLine(const std::string& textLine = " ");
+	  /// add a line of text with color
+	  void addLine(const std::string& textLine, const vec3 color);
+	  /// add a line of text as message
+	  void addLine(const TextLogMessage& message);
+
+    /// clear log
+    void clear();
+
+    /// write log
+    void writeLog (std::string filename);
+
+	  /// scroll up
+    void scrollUp(unsigned int lines = 1);
+
+    /// scroll down
+    void scrollDown(unsigned int lines = 1);
+
+    /// render the log to the screen
+    void draw();
+
+    /// get a pointer to the gloost::TextureText object to configure it
+    TextureText* getTextureTextObject();
+
+    /// get Position of the log
+    const vec2& getPosition();
+
+    /// set Position of the log
+    void setPosition(const vec2& position);
+
+    /// set number of lines to view
+    void setLinesToView(unsigned int number);
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.06.12 otaco
+
+Renamed gloost::TextureManager::getTextureWithoutReference(unsigned int id) in
+
+  gloost::TextureManager::getTextureWithoutRefcount(unsigned int id).
+
+The new name is now what the methode really does. Alternatively there is the
+function with the shorter name
+  
+  gloost::TextureManager::getTextureWOR(unsigned int id)
+  
+that does the same job.
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.06.12 otaco
+
+gloost::TextureManager::createTexture(std::string fileName) has now a "shared"
+flag:
+  gloost::TextureManager::createTexture(std::string fileName, bool shared=1);
+
+If you set shared to TRUE and load the texture a several times, the texture will
+not be loaded again but the TextureManager will return the id of the Texture
+with the same filename that was loaded at first. Talking LightWeight pattern
+here...
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.06.11 otaco
+
+gloost::PI is now defined as
+  static const float PI = 3.1415926535;
+instead of
+  float PI = 3.1415926535;
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.06.10 otaco
+
+I removed two redundant multiplications from gloost::frand() and gloost::crand().
+This two functions are now pretty random.
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.06.08 otaco
+
+Fixed incorrect mousespeed per frame with Linux/SDL in gloost::EventHandler::update().
+Instead of generating one mousemove event per frame, linux seems to send more then one.
+This issue was adulterating the field gloost::Mouse::_speed.
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+  2008.06.06 otaco
+
+
+Changed name of gloost::TextureText::bind() into
+  gloost::TextureText::bindFontTexture();
+
+
+
+
