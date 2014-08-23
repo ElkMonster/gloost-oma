@@ -162,6 +162,18 @@ Shader::~Shader()
     removeFromContext(i);
   }
   _programParameter.clear();
+  if (_vertexShaderSource)
+  {
+    delete[] _vertexShaderSource;
+  }
+  if (_fragmentShaderSource)
+  {
+    delete[] _fragmentShaderSource;
+  }
+  if (_geometryShaderSource)
+  {
+    delete[] _geometryShaderSource;
+  }
 }
 
 
@@ -461,7 +473,7 @@ Shader::loadSourceFile(const std::string& fileName)
     {
       if (count > 0)
       {
-        content = (char *)malloc(sizeof(char) * (count+1));
+        content = new char[count+1];
         count = fread(content,sizeof(char),count,fp);
         content[count] = '\0';
       }
