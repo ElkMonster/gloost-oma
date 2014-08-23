@@ -97,7 +97,7 @@ BinaryBundle::BinaryBundle(const unsigned char* buffer, unsigned size):
 
 BinaryBundle::~BinaryBundle()
 {
-	delete _buffer;
+	delete[] _buffer;
 }
 
 
