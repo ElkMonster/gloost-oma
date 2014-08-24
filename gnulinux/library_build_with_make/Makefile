@@ -11,11 +11,6 @@ SRCDIR_GUI = ../../src/gui/
 # SDL sound
 SRCDIR_SDLSOUND = ../../src/sdlsound/
 
-# CONTRIB 
-SRCDIR_TINYXML = ../contrib/tinyxml/
-LIBDIR_TINYXML = ../bin
-LIB_TINYXML    = ../bin/libtinyxml.a
-
 CXX = c++
 CXXFLAGS = -I$(SRCDIR) -I$(SRCDIR_GRAPH) -I$(SRCDIR_GUI) -I$(SRCDIR_SDLSOUND) -I$(SRCDIR_TINYXML) -DLINUX -Wall -fPIC
 LDDFLAGS = -shared 
@@ -33,14 +28,11 @@ default: $(TARGET) $(TARGET_STATIC)
 	@echo built $(TARGET) $(TARGET_STATIC)
 
 
-$(TARGET): $(LIB_TINYXML) $(OBJECTS) $(HEADERS) Makefile
-	$(CXX) $(LDDFLAGS) -o $@ $(LIBS) $(OBJECTS) $(LIB_TINYXML)
+$(TARGET): $(OBJECTS) $(HEADERS) Makefile
+	$(CXX) $(LDDFLAGS) -o $@ $(LIBS) $(OBJECTS)
 
 $(TARGET_STATIC): $(TARGET)
 	ar rc $@ $(OBJECTS)
-
-$(LIB_TINYXML):
-	cd $(SRCDIR_TINYXML) && make
 
 %.o: $(SRCDIR)%.cpp
 	$(CXX) -c $< $(CXXFLAGS)
@@ -61,12 +53,10 @@ sdlsound/%.o: $(SRCDIR_SDLSOUND)%.cpp
 
 clean:
 	@rm -f $(OBJECTS)
-	@cd $(SRCDIR_TINYXML) && make clean
 	@echo cleaned
 
 realclean: clean
 	@rm -f $(TARGET) $(TARGET) *~
-	@cd $(SRCDIR_TINYXML) && make realclean
 	@echo realcleaned
 
 

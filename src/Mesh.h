@@ -36,7 +36,7 @@
 #include <Point3.h>
 #include <Ray.h>
 #include <BoundingBox.h>
-#include <ObjMatFile.h>
+#include <UniformTypes.h>
 #include <BitMask.h>
 
 

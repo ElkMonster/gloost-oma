@@ -29,7 +29,6 @@
 #include <gloostMath.h>
 #include <Texture.h>
 #include <TextureManager.h>
-#include <DirectoryList.h>
 #include <gloostHelper.h>
 
 
@@ -163,140 +162,140 @@ TileSet::loadFromTexture( unsigned int textureId,
 
   /// class constructor takes a path to a folder with frames of the same size
 
-void
-TileSet::loadFromFolder(const std::string& tilesFolderPath)
-{
-
-#ifndef GLOOST_SYSTEM_DISABLE_OUTPUT_MESSAGES
-  std::cout << std::endl;
-//  std::cout << std::endl << "Message from TileSet::TileSet(const std::string& tilesFolderPath) on SharedResource " << getSharedResourceId() << ":";
-  std::cout << std::endl << "             Creating tile texture for folder \"" << tilesFolderPath << "\"";
-  std::flush(std::cout);
-#endif
-
-
-  gloost::TextureManager* texManager = gloost::TextureManager::getInstance();
-
-
-  DirectoryList dir(tilesFolderPath);
-  dir.open();
-
-
-  std::vector<std::string>& files = dir.get_entries();
-  std::vector<int> textureIds;
-
-
-  for (unsigned int i=0; i != files.size(); ++i)
-  {
-    if (gloost::pathToFilename(files[i]).length() > 4)
-    {
-      textureIds.push_back(texManager->createTexture(files[i]));
-    }
-  }
-
-
-  /// test
-  _numFrames = files.size()-2;
-
-  Texture* sample = texManager->getTextureWithoutRefcount(textureIds[0]);
-
-  _tileWidth  = sample->getWidth();
-  _tileHeight = sample->getHeight();
-
-  _tileAspectRatio = _tileWidth/(float)_tileHeight;
-
-
-
-  /// determine ideal texture size
-  _numTilesH = 1;
-  _numTilesV = 1;
-  unsigned int numTilesInTexture = 1;
-
-
-  while(numTilesInTexture < _numFrames)
-  {
-    if (_numTilesH*_tileWidth < _numTilesV*_tileHeight)
-    {
-      ++_numTilesH;
-    }
-    else
-    {
-      ++_numTilesV;
-    }
-
-    numTilesInTexture = _numTilesH*_numTilesV;
-  }
-
-  int atlasTextureWidth  = _tileWidth*_numTilesH;
-  int atlasTextureHeight = _tileHeight*_numTilesV;
-
-
-
-#ifndef GLOOST_SYSTEM_DISABLE_OUTPUT_MESSAGES
-  std::cout << std::endl;
-//  std::cout << std::endl << "Message from TileSet::TileSet(const std::string& tilesFolderPath) on SharedResource " << getSharedResourceId() << ":";
-  std::cout << std::endl << "             Using following parameters:";
-  std::cout << std::endl << "             Folder: ...... \"" << tilesFolderPath << "\"";
-  std::cout << std::endl << "             Number of Frames .... " << _numFrames;
-  std::cout << std::endl << "             Tile width: ......... " << _tileWidth;
-  std::cout << std::endl << "             Tile height: ........ " << _tileHeight;
-  std::cout << std::endl << "             Texture width: ...... " << atlasTextureWidth;
-  std::cout << std::endl << "             Texture height: ..... " << atlasTextureHeight;
-  std::cout << std::endl << "             Tiles horizontal: ... " << _numTilesH;
-  std::cout << std::endl << "             Tiles vertical: ..... " << _numTilesV;
-  std::flush(std::cout);
-#endif
-
-
-  createAtlasTexture(atlasTextureWidth,
-                     atlasTextureHeight,
-                     GL_TEXTURE_2D,
-                     sample->getInternalFormat(),
-                     sample->getPixelFormat(),
-                     sample->getPixelType() );
-
-
-
-  _atlasTexture->setTexParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  _atlasTexture->setTexParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-
-
-  _atlasTexture->bind();
-
-
-  int x = 0;
-  int y = 0;
-
-  /// copy all tiles into one tile texture
-  for (unsigned int i=0; i!=_numFrames; ++i)
-  {
-     createTileFromTexture(textureIds[i],
-                           x*_tileWidth,
-                           y*_tileHeight);
-
-
-
-    ++x;
-
-    if (x == (int)(_numTilesH))
-    {
-      x = 0;
-      ++y;
-    }
-
-    /// drop refrence of this single tile because it is no longer needed
-    texManager->dropReference(textureIds[i]);
-
-  }
-
-  _atlasTexture->unbind();
-
-
-
-
-//  precalcUniformTexCoords();
-}
+//void
+//TileSet::loadFromFolder(const std::string& tilesFolderPath)
+//{
+//
+//#ifndef GLOOST_SYSTEM_DISABLE_OUTPUT_MESSAGES
+//  std::cout << std::endl;
+////  std::cout << std::endl << "Message from TileSet::TileSet(const std::string& tilesFolderPath) on SharedResource " << getSharedResourceId() << ":";
+//  std::cout << std::endl << "             Creating tile texture for folder \"" << tilesFolderPath << "\"";
+//  std::flush(std::cout);
+//#endif
+//
+//
+//  gloost::TextureManager* texManager = gloost::TextureManager::getInstance();
+//
+//
+//  DirectoryList dir(tilesFolderPath);
+//  dir.open();
+//
+//
+//  std::vector<std::string>& files = dir.get_entries();
+//  std::vector<int> textureIds;
+//
+//
+//  for (unsigned int i=0; i != files.size(); ++i)
+//  {
+//    if (gloost::pathToFilename(files[i]).length() > 4)
+//    {
+//      textureIds.push_back(texManager->createTexture(files[i]));
+//    }
+//  }
+//
+//
+//  /// test
+//  _numFrames = files.size()-2;
+//
+//  Texture* sample = texManager->getTextureWithoutRefcount(textureIds[0]);
+//
+//  _tileWidth  = sample->getWidth();
+//  _tileHeight = sample->getHeight();
+//
+//  _tileAspectRatio = _tileWidth/(float)_tileHeight;
+//
+//
+//
+//  /// determine ideal texture size
+//  _numTilesH = 1;
+//  _numTilesV = 1;
+//  unsigned int numTilesInTexture = 1;
+//
+//
+//  while(numTilesInTexture < _numFrames)
+//  {
+//    if (_numTilesH*_tileWidth < _numTilesV*_tileHeight)
+//    {
+//      ++_numTilesH;
+//    }
+//    else
+//    {
+//      ++_numTilesV;
+//    }
+//
+//    numTilesInTexture = _numTilesH*_numTilesV;
+//  }
+//
+//  int atlasTextureWidth  = _tileWidth*_numTilesH;
+//  int atlasTextureHeight = _tileHeight*_numTilesV;
+//
+//
+//
+//#ifndef GLOOST_SYSTEM_DISABLE_OUTPUT_MESSAGES
+//  std::cout << std::endl;
+////  std::cout << std::endl << "Message from TileSet::TileSet(const std::string& tilesFolderPath) on SharedResource " << getSharedResourceId() << ":";
+//  std::cout << std::endl << "             Using following parameters:";
+//  std::cout << std::endl << "             Folder: ...... \"" << tilesFolderPath << "\"";
+//  std::cout << std::endl << "             Number of Frames .... " << _numFrames;
+//  std::cout << std::endl << "             Tile width: ......... " << _tileWidth;
+//  std::cout << std::endl << "             Tile height: ........ " << _tileHeight;
+//  std::cout << std::endl << "             Texture width: ...... " << atlasTextureWidth;
+//  std::cout << std::endl << "             Texture height: ..... " << atlasTextureHeight;
+//  std::cout << std::endl << "             Tiles horizontal: ... " << _numTilesH;
+//  std::cout << std::endl << "             Tiles vertical: ..... " << _numTilesV;
+//  std::flush(std::cout);
+//#endif
+//
+//
+//  createAtlasTexture(atlasTextureWidth,
+//                     atlasTextureHeight,
+//                     GL_TEXTURE_2D,
+//                     sample->getInternalFormat(),
+//                     sample->getPixelFormat(),
+//                     sample->getPixelType() );
+//
+//
+//
+//  _atlasTexture->setTexParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//  _atlasTexture->setTexParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//
+//
+//
+//  _atlasTexture->bind();
+//
+//
+//  int x = 0;
+//  int y = 0;
+//
+//  /// copy all tiles into one tile texture
+//  for (unsigned int i=0; i!=_numFrames; ++i)
+//  {
+//     createTileFromTexture(textureIds[i],
+//                           x*_tileWidth,
+//                           y*_tileHeight);
+//
+//
+//
+//    ++x;
+//
+//    if (x == (int)(_numTilesH))
+//    {
+//      x = 0;
+//      ++y;
+//    }
+//
+//    /// drop refrence of this single tile because it is no longer needed
+//    texManager->dropReference(textureIds[i]);
+//
+//  }
+//
+//  _atlasTexture->unbind();
+//
+//
+//
+//
+////  precalcUniformTexCoords();
+//}
 
 
 ////////////////////////////////////////////////////////////////////////////////

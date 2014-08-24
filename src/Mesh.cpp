@@ -76,7 +76,6 @@ Mesh::Mesh():
   _supportedInterleavedComponents(GLOOST_BITMASK_ALL_UNSET),
   _interleavedInfo(),
   _indexRanges(),
-//  _materials(new ObjMatFile()),
   _boundingBox()
 {
 //  _materials->takeReference();
