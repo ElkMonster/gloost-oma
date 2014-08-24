@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="library_build_with_codeblocks" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../bin/gloost" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="../obj_files/libgloost/obj_release" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-Os" />
+					<Add option="-O3" />
+					<Add option="-O2" />
+					<Add option="-O1" />
+					<Add option="-O" />
+					<Add option="-Wshadow" />
+					<Add option="-Winit-self" />
+					<Add option="-Wredundant-decls" />
+					<Add option="-Wcast-align" />
+					<Add option="-Wfloat-equal" />
+					<Add option="-Winline" />
+					<Add option="-Wmissing-declarations" />
+					<Add option="-Wmissing-include-dirs" />
+					<Add option="-Wall" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug">
+				<Option output="../bin/gloost_db" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="../obj_files/libgloost/obj_debug" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add directory="../library_build_with_codeblocks" />
+					<Add directory="../../../src" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
+				<Environment>
+					<Variable name="LINUX" value="" />
+				</Environment>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-W" />
+			<Add option="-fexceptions" />
+			<Add option="-fPIC" />
+			<Add option="-DGLOOST_GNULINUX" />
+			<Add directory="../../src" />
+			<Add directory="/usr/include/freetype2" />
+		</Compiler>
+		<Linker>
+			<Add library="GL" />
+			<Add library="GLU" />
+			<Add library="freetype" />
+			<Add library="freeimage" />
+			<Add library="boost_thread" />
+			<Add directory="../bin" />
+		</Linker>
+		<Unit filename="../../src/BinaryBundle.cpp" />
+		<Unit filename="../../src/BinaryBundle.h" />
+		<Unit filename="../../src/BitMask.cpp" />
+		<Unit filename="../../src/BitMask.h" />
+		<Unit filename="../../src/BoundingBox.cpp" />
+		<Unit filename="../../src/BoundingBox.h" />
+		<Unit filename="../../src/BoundingVolume.cpp" />
+		<Unit filename="../../src/BoundingVolume.h" />
+		<Unit filename="../../src/Brush.cpp" />
+		<Unit filename="../../src/Brush.h" />
+		<Unit filename="../../src/Camera.cpp" />
+		<Unit filename="../../src/Camera.h" />
+		<Unit filename="../../src/Color4.cpp" />
+		<Unit filename="../../src/Color4.h" />
+		<Unit filename="../../src/Dcs.cpp" />
+		<Unit filename="../../src/Dcs.h" />
+		<Unit filename="../../src/Drawable.cpp" />
+		<Unit filename="../../src/Drawable.h" />
+		<Unit filename="../../src/DrawableCompound.cpp" />
+		<Unit filename="../../src/DrawableCompound.h" />
+		<Unit filename="../../src/Fbo.cpp" />
+		<Unit filename="../../src/Fbo.h" />
+		<Unit filename="../../src/FontCache.cpp" />
+		<Unit filename="../../src/FontCache.h" />
+		<Unit filename="../../src/FreeTypeWriter.cpp" />
+		<Unit filename="../../src/FreeTypeWriter.h" />
+		<Unit filename="../../src/Frustum.cpp" />
+		<Unit filename="../../src/Frustum.h" />
+		<Unit filename="../../src/Image.cpp" />
+		<Unit filename="../../src/Image.h" />
+		<Unit filename="../../src/Matrix.cpp" />
+		<Unit filename="../../src/Matrix.h" />
+		<Unit filename="../../src/MatrixStack.cpp" />
+		<Unit filename="../../src/MatrixStack.h" />
+		<Unit filename="../../src/Mesh.cpp" />
+		<Unit filename="../../src/Mesh.h" />
+		<Unit filename="../../src/Mouse.cpp" />
+		<Unit filename="../../src/Mouse.h" />
+		<Unit filename="../../src/MultiGlContext.cpp" />
+		<Unit filename="../../src/MultiGlContext.h" />
+		<Unit filename="../../src/Plane.cpp" />
+		<Unit filename="../../src/Plane.h" />
+		<Unit filename="../../src/Point3.cpp" />
+		<Unit filename="../../src/Point3.h" />
+		<Unit filename="../../src/Quaternion.cpp" />
+		<Unit filename="../../src/Quaternion.h" />
+		<Unit filename="../../src/Ray.cpp" />
+		<Unit filename="../../src/Ray.h" />
+		<Unit filename="../../src/ScreenCamera.cpp" />
+		<Unit filename="../../src/ScreenCamera.h" />
+		<Unit filename="../../src/Shader.cpp" />
+		<Unit filename="../../src/Shader.h" />
+		<Unit filename="../../src/SharedResource.cpp" />
+		<Unit filename="../../src/SharedResource.h" />
+		<Unit filename="../../src/Texture.cpp" />
+		<Unit filename="../../src/Texture.h" />
+		<Unit filename="../../src/TextureAtlas.cpp" />
+		<Unit filename="../../src/TextureAtlas.h" />
+		<Unit filename="../../src/TextureManager.cpp" />
+		<Unit filename="../../src/TextureManager.h" />
+		<Unit filename="../../src/TextureText.cpp" />
+		<Unit filename="../../src/TextureText.h" />
+		<Unit filename="../../src/TileSet.cpp" />
+		<Unit filename="../../src/TileSet.h" />
+		<Unit filename="../../src/UniformSet.cpp" />
+		<Unit filename="../../src/UniformSet.h" />
+		<Unit filename="../../src/UniformTypes.cpp" />
+		<Unit filename="../../src/UniformTypes.h" />
+		<Unit filename="../../src/Vbo.cpp" />
+		<Unit filename="../../src/Vbo.h" />
+		<Unit filename="../../src/Vector2.cpp" />
+		<Unit filename="../../src/Vector2.h" />
+		<Unit filename="../../src/Vector3.cpp" />
+		<Unit filename="../../src/Vector3.h" />
+		<Unit filename="../../src/Viewport.cpp" />
+		<Unit filename="../../src/Viewport.h" />
+		<Unit filename="../../src/glErrorUtil.cpp" />
+		<Unit filename="../../src/glErrorUtil.h" />
+		<Unit filename="../../src/gloostConfig.h" />
+		<Unit filename="../../src/gloostGlUtil.h" />
+		<Unit filename="../../src/gloostGlutGoodies.h" />
+		<Unit filename="../../src/gloostHelper.h" />
+		<Unit filename="../../src/gloostMath.h" />
+		<Unit filename="../../src/gloostMeshGoodies.h" />
+		<Unit filename="../../src/gloostRenderGoodies.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
